@@ -17,6 +17,9 @@ const InternetScheduler = () => {
     const [unblockTime, setUnblockTime] = useState("");
     const [selectedDays, setSelectedDays] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedCategoriesUnblock, setSelectedCategoriesUnblock] = useState(
+        []
+    );
 
     const handleSubmit = () => {
         // Lógica para enviar os dados do agendamento
@@ -33,12 +36,16 @@ const InternetScheduler = () => {
     const categoriesUnblock = [
         { id: "message", name: "Mensagem" },
         { id: "search", name: "Busca" },
-        { id: "bla", name: "Bla" },
+        { id: "bla", name: "Youtube" },
     ];
 
     return (
         <div className={`${containerStyles} space-y-8`}>
-            <h1 className={headerStyles}>📶 Controle de Acesso à Internet</h1>
+            <h1
+                className={`${headerStyles} bg-[#38927f] text-white block px-4 py-2 rounded-none text-lg font-bold`}
+            >
+                Controle de Acesso à Internet
+            </h1>
 
             <div className={`${cardStyles} ${cardSpacing}`}>
                 <div className={formContainer}>
@@ -46,13 +53,13 @@ const InternetScheduler = () => {
                         value={blockTime}
                         onChange={setBlockTime}
                         label="Horário de Bloqueio"
-                        labelColor="text-blue-600"
+                        labelColor="bg-[#38927f] text-white inline-block px-4 py2 rounded w-full text-lg font-bold"
                     />
                     <TimePicker
                         value={unblockTime}
                         onChange={setUnblockTime}
                         label="Horário de Desbloqueio"
-                        labelColor="text-emerald-600"
+                        labelColor="bg-[#38927f] text-white block px-4 py2 rounded w-full text-lg font-bold"
                     />
                 </div>
             </div>
@@ -62,29 +69,29 @@ const InternetScheduler = () => {
                     selectedDays={selectedDays}
                     onChange={setSelectedDays}
                     label="Dias da Semana"
-                    labelClass="text-purple-600 font-medium"
+                    labelClass="bg-[#38927f] text-white block px-4 py2 rounded w-full text-lg font-bold"
                 />
             </div>
 
             <div className={`${cardStyles} ${cardSpacing}`}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="text-black">
                     <CategoryBlocker
                         selectedCategories={selectedCategories}
                         onChange={setSelectedCategories}
-                        title="Categorias Bloqueadas"
+                        title="Categorias Bloqueadas:"
                         categories={categoriesBlock}
                     />
                     <CategoryBlocker
-                        selectedCategories={selectedCategories}
-                        onChange={setSelectedCategories}
-                        title="Categorias desbloqueadas"
+                        selectedCategories={selectedCategoriesUnblock}
+                        onChange={setSelectedCategoriesUnblock}
+                        title="Categorias Desbloqueadas:"
                         categories={categoriesUnblock}
                     />
                 </div>
             </div>
             <div className="flex justify-center mt-4">
                 <button
-                    className={`${primaryButton} w-full md:w-auto`}
+                    className={`${primaryButton} w-full md:w-auto text-lg font-bold`}
                     onClick={handleSubmit}
                 >
                     Salvar Agendamento

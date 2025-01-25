@@ -2,15 +2,10 @@ import PropTypes from "prop-types";
 
 import style from "./style.less";
 
-const TimePicker = ({
-    value,
-    onChange,
-    label,
-    labelColor = "text-gray-700",
-}) => {
+const TimePicker = ({ value, onChange, label, labelColor = "text-black" }) => {
     return (
         <div>
-            <label className={`block text-sm font-medium mb-1 ${labelColor}`}>
+            <label className={`block text-xlg font-xlg mb-1 ${labelColor}`}>
                 {label}
             </label>
             <input

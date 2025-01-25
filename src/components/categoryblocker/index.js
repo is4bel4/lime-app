@@ -23,14 +23,14 @@ const CategoryBlocker = ({
 
     return (
         <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="bg-[#38927f] text-white block px-4 py2 rounded w-full">
                 {title}
             </label>
             <div className="space-y-3">
                 <button
                     type="button"
                     onClick={handleSelectAll}
-                    className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-100"
+                    className="text-black text-base font-medium transition-colors w-1/2 border-none text-left"
                 >
                     {selectedCategories.length === categories.length
                         ? "Desmarcar Todos"

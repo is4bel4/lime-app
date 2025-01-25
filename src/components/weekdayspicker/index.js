@@ -4,7 +4,7 @@ const WeekDaysPicker = ({
     selectedDays,
     onChange,
     label,
-    labelClass = "text-gray-700",
+    labelClass = "text-black",
 }) => {
     const weekDays = [
         { id: 0, name: "Domingo" },
@@ -18,19 +18,19 @@ const WeekDaysPicker = ({
 
     return (
         <div className="mt-4">
-            <label className={`block text-sm font-medium mb-2 ${labelClass}`}>
+            <label className={`block text-xl font-medium mb-2 ${labelClass}`}>
                 {label}
             </label>
             <div className="flex flex-wrap gap-3">
                 {weekDays.map((day) => (
                     <div
                         key={day.id}
-                        className="flex items-center space-x-2 bg-white border rounded-lg px-3 py-2 hover:bg-gray-50"
+                        className="flex items-center space-x-2 bg-white border-none rounded-lg px-4 py-3 hover:bg-gray-50"
                     >
                         <input
                             type="checkbox"
                             id={`day-${day.id}`}
-                            className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                            className="h-6 w-6 text-blue-600 rounded border-gray-300"
                             checked={selectedDays.includes(day.id)}
                             onChange={() => {
                                 const newDays = selectedDays.includes(day.id)
@@ -41,7 +41,7 @@ const WeekDaysPicker = ({
                         />
                         <label
                             htmlFor={`day-${day.id}`}
-                            className="text-sm text-gray-700 cursor-pointer"
+                            className="text-lg text-gray-700 cursor-pointer"
                         >
                             {day.name}
                         </label>
