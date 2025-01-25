@@ -1,0 +1,64 @@
+import style from "./style.less";
+
+const CategoryBlocker = ({
+    selectedCategories,
+    onChange,
+    title,
+    categories,
+}) => {
+    const handleCategoryToggle = (categoryId) => {
+        const updatedCategories = selectedCategories.includes(categoryId)
+            ? selectedCategories.filter((id) => id !== categoryId)
+            : [...selectedCategories, categoryId];
+        onChange(updatedCategories);
+    };
+
+    const handleSelectAll = () => {
+        onChange(
+            selectedCategories.length === categories.length
+                ? []
+                : categories.map((category) => category.id)
+        );
+    };
+
+    return (
+        <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+                {title}
+            </label>
+            <div className="space-y-3">
+                <button
+                    type="button"
+                    onClick={handleSelectAll}
+                    className="px-3 py-1 text-sm border rounded-lg hover:bg-gray-100"
+                >
+                    {selectedCategories.length === categories.length
+                        ? "Desmarcar Todos"
+                        : "Selecionar Todos"}
+                </button>
+                <div className="space-y-2">
+                    {categories.map((category) => (
+                        <label
+                            key={category.id}
+                            className="flex items-center space-x-2 cursor-pointer"
+                        >
+                            <input
+                                type="checkbox"
+                                checked={selectedCategories.includes(
+                                    category.id
+                                )}
+                                onChange={() =>
+                                    handleCategoryToggle(category.id)
+                                }
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                            />
+                            <span className="text-sm">{category.name}</span>
+                        </label>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CategoryBlocker;
