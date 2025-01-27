@@ -18,14 +18,14 @@ const WeekDaysPicker = ({
 
     return (
         <div className="mt-4">
-            <label className={`block text-xl font-medium mb-2 ${labelClass}`}>
+            <label className={`block text-base font-bold mb-2 ${labelClass}`}>
                 {label}
             </label>
             <div className="flex flex-wrap gap-3">
                 {weekDays.map((day) => (
                     <div
                         key={day.id}
-                        className="flex items-center space-x-2 bg-white border-none rounded-lg px-4 py-3 hover:bg-gray-50"
+                        className="flex items-center space-x-2 bg-white border-none text-black rounded-lg px-4 py-3 hover:bg-gray-50"
                     >
                         <input
                             type="checkbox"
@@ -41,7 +41,7 @@ const WeekDaysPicker = ({
                         />
                         <label
                             htmlFor={`day-${day.id}`}
-                            className="text-lg text-gray-700 cursor-pointer"
+                            className="text-sm text-black cursor-pointer"
                         >
                             {day.name}
                         </label>

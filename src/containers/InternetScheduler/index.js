@@ -42,7 +42,7 @@ const InternetScheduler = () => {
     return (
         <div className={`${containerStyles} space-y-8`}>
             <h1
-                className={`${headerStyles} bg-[#38927f] text-white block px-4 py-2 rounded-none text-lg font-bold`}
+                className={`${headerStyles} bg-[#38927f] text-white block px-4 py-2 rounded-none text-xl text-2xl font-bold`}
             >
                 Controle de Acesso à Internet
             </h1>
@@ -53,13 +53,13 @@ const InternetScheduler = () => {
                         value={blockTime}
                         onChange={setBlockTime}
                         label="Horário de Bloqueio"
-                        labelColor="bg-[#38927f] text-white inline-block px-4 py2 rounded w-full text-lg font-bold"
+                        labelColor="bg-[#38927f] text-white inline-block px-6 py-3 rounded w-full text-base font-bold"
                     />
                     <TimePicker
                         value={unblockTime}
                         onChange={setUnblockTime}
                         label="Horário de Desbloqueio"
-                        labelColor="bg-[#38927f] text-white block px-4 py2 rounded w-full text-lg font-bold"
+                        labelColor="bg-[#38927f] text-white block px-6 py-3 rounded w-full text-base font-bold"
                     />
                 </div>
             </div>
@@ -69,29 +69,28 @@ const InternetScheduler = () => {
                     selectedDays={selectedDays}
                     onChange={setSelectedDays}
                     label="Dias da Semana"
-                    labelClass="bg-[#38927f] text-white block px-4 py2 rounded w-full text-lg font-bold"
+                    labelClass="bg-[#38927f] text-white block px-6 py-3 rounded w-full"
                 />
             </div>
-
             <div className={`${cardStyles} ${cardSpacing}`}>
-                <div className="text-black">
+                <div className="text-black text-base space-y-6">
                     <CategoryBlocker
                         selectedCategories={selectedCategories}
                         onChange={setSelectedCategories}
-                        title="Categorias Bloqueadas:"
+                        title="Categorias Bloqueadas"
                         categories={categoriesBlock}
                     />
                     <CategoryBlocker
                         selectedCategories={selectedCategoriesUnblock}
                         onChange={setSelectedCategoriesUnblock}
-                        title="Categorias Desbloqueadas:"
+                        title="Categorias Desbloqueadas"
                         categories={categoriesUnblock}
                     />
                 </div>
             </div>
             <div className="flex justify-center mt-4">
                 <button
-                    className={`${primaryButton} w-full md:w-auto text-lg font-bold`}
+                    className={`${primaryButton} w-full md:w-auto text-base font-bold`}
                     onClick={handleSubmit}
                 >
                     Salvar Agendamento
