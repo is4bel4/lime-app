@@ -20,14 +20,39 @@ const InternetScheduler = () => {
     const [selectedCategoriesUnblock, setSelectedCategoriesUnblock] = useState(
         []
     );
+    // Novos estados para os IPs
+    const [blockedIps, setBlockedIps] = useState([]);
+    const [unblockedIps, setUnblockedIps] = useState([]);
 
     const handleSubmit = () => {
-        // Lógica para enviar os dados do agendamento
+        // Atualizada a lógica para incluir os IPs
         console.log("Bloqueio:", blockTime);
         console.log("Desbloqueio:", unblockTime);
         console.log("Dias:", selectedDays);
-        console.log("Categorias:", selectedCategories);
+        console.log("Categorias Bloqueadas:", selectedCategories);
+        console.log("IPs Bloqueados:", blockedIps);
+        console.log("Categorias Desbloqueadas:", selectedCategoriesUnblock);
+        console.log("IPs Desbloqueados:", unblockedIps);
+
+        // Objeto com todos os dados para enviar ao backend
+        const scheduleData = {
+            blockTime,
+            unblockTime,
+            selectedDays,
+            blocked: {
+                categories: selectedCategories,
+                ips: blockedIps,
+            },
+            unblocked: {
+                categories: selectedCategoriesUnblock,
+                ips: unblockedIps,
+            },
+        };
+
+        console.log("Dados completos do agendamento:", scheduleData);
+        // Aqui você pode adicionar a chamada para sua API
     };
+
     const categoriesBlock = [
         { id: "adult", name: "Sites Adultos" },
         { id: "games", name: "Jogos" },
@@ -77,14 +102,18 @@ const InternetScheduler = () => {
                     <CategoryBlocker
                         selectedCategories={selectedCategories}
                         onChange={setSelectedCategories}
+                        onIpsChange={setBlockedIps}
                         title="Categorias Bloqueadas"
                         categories={categoriesBlock}
+                        type="block" // Especifica que é para bloqueio
                     />
                     <CategoryBlocker
                         selectedCategories={selectedCategoriesUnblock}
                         onChange={setSelectedCategoriesUnblock}
+                        onIpsChange={setUnblockedIps}
                         title="Categorias Desbloqueadas"
                         categories={categoriesUnblock}
+                        type="unblock" // Especifica que é para desbloqueio
                     />
                 </div>
             </div>

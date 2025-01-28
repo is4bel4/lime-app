@@ -7,7 +7,7 @@ export const cardSpacing = "mb-6"; // Novo componente de espaçamento
 export const formContainer = "space-y-5"; // Espaçamento vertical entre elementos de formulário
 export const buttonStyles =
     "px-6 py-3 rounded-lg font-semibold transition-all duration-200";
-export const primaryButton = `${buttonStyles} bg-blue-400 text-white hover:bg-blue-700 hover:scale-[1.02]`;
+export const primaryButton = `${buttonStyles} bg-blue-400 text-white hover:bg-blue-400 hover:scale-[1.02]`;
 export const secondaryButton = `${buttonStyles} border-2 border-blue-100 text-blue-700 hover:bg-blue-50`;
 
 // Sistema de espaçamento ampliado
