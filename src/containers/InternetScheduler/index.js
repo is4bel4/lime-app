@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { setInternetSchedule } from "../../../plugins/lime-plugin-guarita/src/guaritaApi";
 import CategoryBlocker from "../../components/categoryblocker";
 import {
     cardSpacing,
@@ -20,37 +21,53 @@ const InternetScheduler = () => {
     const [selectedCategoriesUnblock, setSelectedCategoriesUnblock] = useState(
         []
     );
-    // Novos estados para os IPs
     const [blockedIps, setBlockedIps] = useState([]);
     const [unblockedIps, setUnblockedIps] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [notification, setNotification] = useState({
+        show: false,
+        message: "",
+        type: "",
+    });
 
-    const handleSubmit = () => {
-        // Atualizada a lógica para incluir os IPs
-        console.log("Bloqueio:", blockTime);
-        console.log("Desbloqueio:", unblockTime);
-        console.log("Dias:", selectedDays);
-        console.log("Categorias Bloqueadas:", selectedCategories);
-        console.log("IPs Bloqueados:", blockedIps);
-        console.log("Categorias Desbloqueadas:", selectedCategoriesUnblock);
-        console.log("IPs Desbloqueados:", unblockedIps);
+    const showNotification = (message, type = "success") => {
+        setNotification({ show: true, message, type });
+        setTimeout(
+            () => setNotification({ show: false, message: "", type: "" }),
+            3000
+        );
+    };
 
-        // Objeto com todos os dados para enviar ao backend
-        const scheduleData = {
-            blockTime,
-            unblockTime,
-            selectedDays,
-            blocked: {
-                categories: selectedCategories,
-                ips: blockedIps,
-            },
-            unblocked: {
-                categories: selectedCategoriesUnblock,
-                ips: unblockedIps,
-            },
-        };
+    const handleSubmit = async () => {
+        setIsLoading(true);
+        try {
+            const scheduleData = {
+                blockTime,
+                unblockTime,
+                selectedDays,
+                blocked: {
+                    categories: selectedCategories,
+                    ips: blockedIps,
+                },
+                unblocked: {
+                    categories: selectedCategoriesUnblock,
+                    ips: unblockedIps,
+                },
+            };
 
-        console.log("Dados completos do agendamento:", scheduleData);
-        // Aqui você pode adicionar a chamada para sua API
+            await setInternetSchedule(scheduleData);
+            console.log("Dados enviados:", scheduleData);
+
+            showNotification("Configurações salvas com sucesso!");
+        } catch (error) {
+            console.error("Erro ao salvar agendamento:", error);
+            showNotification(
+                "Erro ao salvar as configurações. Tente novamente.",
+                "error"
+            );
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const categoriesBlock = [
@@ -58,6 +75,7 @@ const InternetScheduler = () => {
         { id: "games", name: "Jogos" },
         { id: "bets", name: "Bets" },
     ];
+
     const categoriesUnblock = [
         { id: "message", name: "Mensagem" },
         { id: "search", name: "Busca" },
@@ -66,6 +84,24 @@ const InternetScheduler = () => {
 
     return (
         <div className={`${containerStyles} space-y-8`}>
+            {notification.show && (
+                <div
+                    className={`
+                        fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                        p-4 rounded-lg shadow-lg z-50
+                        ${
+                            notification.type === "error"
+                                ? "bg-red-500"
+                                : "bg-[#38927f]"
+                        }
+                        text-white transition-all duration-300 ease-in-out
+                        min-w-[200px] text-center
+                    `}
+                >
+                    {notification.message}
+                </div>
+            )}
+
             <h1
                 className={`${headerStyles} bg-[#38927f] text-white block px-4 py-2 rounded-none text-xl text-2xl font-bold`}
             >
@@ -97,6 +133,7 @@ const InternetScheduler = () => {
                     labelClass="bg-[#38927f] text-white block px-6 py-3 rounded w-full"
                 />
             </div>
+
             <div className={`${cardStyles} ${cardSpacing}`}>
                 <div className="text-black text-base space-y-6">
                     <CategoryBlocker
@@ -105,7 +142,7 @@ const InternetScheduler = () => {
                         onIpsChange={setBlockedIps}
                         title="Categorias Bloqueadas"
                         categories={categoriesBlock}
-                        type="block" // Especifica que é para bloqueio
+                        type="block"
                     />
                     <CategoryBlocker
                         selectedCategories={selectedCategoriesUnblock}
@@ -113,16 +150,49 @@ const InternetScheduler = () => {
                         onIpsChange={setUnblockedIps}
                         title="Categorias Desbloqueadas"
                         categories={categoriesUnblock}
-                        type="unblock" // Especifica que é para desbloqueio
+                        type="unblock"
                     />
                 </div>
             </div>
+
             <div className="flex justify-center mt-4">
                 <button
-                    className={`${primaryButton} w-full md:w-auto text-base font-bold`}
+                    className={`
+                        ${primaryButton} 
+                        w-full md:w-auto 
+                        text-base font-bold
+                        ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+                    `}
                     onClick={handleSubmit}
+                    disabled={isLoading}
                 >
-                    Salvar Agendamento
+                    {isLoading ? (
+                        <span className="flex items-center justify-center">
+                            <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                />
+                                <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                            </svg>
+                            Salvando...
+                        </span>
+                    ) : (
+                        "Salvar Agendamento"
+                    )}
                 </button>
             </div>
         </div>
