@@ -1,7 +1,6 @@
+import { Trans } from "@lingui/macro";
 import React, { useState } from "react";
 
-import { setInternetSchedule } from "../../../plugins/lime-plugin-guarita/src/guaritaApi";
-import CategoryBlocker from "../../components/categoryblocker";
 import {
     cardSpacing,
     cardStyles,
@@ -9,21 +8,40 @@ import {
     formContainer,
     headerStyles,
     primaryButton,
-} from "../../components/common/styles";
+} from "plugins/lime-plugin-guarita/src/styles";
+
+import CategoryBlocker from "../../components/categoryblocker";
 import TimePicker from "../../components/timepicker";
 import WeekDaysPicker from "../../components/weekdayspicker";
+import {
+    useInternetSchedule,
+    useSetInternetSchedule,
+} from "../../guaritaQueries";
 
 const InternetScheduler = () => {
-    const [blockTime, setBlockTime] = useState("");
-    const [unblockTime, setUnblockTime] = useState("");
-    const [selectedDays, setSelectedDays] = useState([]);
-    const [selectedCategories, setSelectedCategories] = useState([]);
-    const [selectedCategoriesUnblock, setSelectedCategoriesUnblock] = useState(
-        []
+    const { data: scheduleData } = useInternetSchedule();
+    const { mutate: saveSchedule, isLoading: isSaving } =
+        useSetInternetSchedule();
+
+    const [blockTime, setBlockTime] = useState(scheduleData?.blockTime || "");
+    const [unblockTime, setUnblockTime] = useState(
+        scheduleData?.unblockTime || ""
     );
-    const [blockedIps, setBlockedIps] = useState([]);
-    const [unblockedIps, setUnblockedIps] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [selectedDays, setSelectedDays] = useState(
+        scheduleData?.selectedDays || []
+    );
+    const [selectedCategories, setSelectedCategories] = useState(
+        scheduleData?.selectedCategories || []
+    );
+    const [selectedCategoriesUnblock, setSelectedCategoriesUnblock] = useState(
+        scheduleData?.selectedCategoriesUnblock || []
+    );
+    const [blockedIps, setBlockedIps] = useState(
+        scheduleData?.blockedIps || []
+    );
+    const [unblockedIps, setUnblockedIps] = useState(
+        scheduleData?.unblockedIps || []
+    );
     const [notification, setNotification] = useState({
         show: false,
         message: "",
@@ -39,51 +57,42 @@ const InternetScheduler = () => {
     };
 
     const handleSubmit = async () => {
-        setIsLoading(true);
         try {
             const scheduleData = {
                 blockTime,
                 unblockTime,
                 selectedDays,
-                blocked: {
-                    categories: selectedCategories,
-                    ips: blockedIps,
-                },
-                unblocked: {
-                    categories: selectedCategoriesUnblock,
-                    ips: unblockedIps,
-                },
+                selectedCategories,
+                selectedCategoriesUnblock,
+                blockedIps,
+                unblockedIps,
             };
 
-            await setInternetSchedule(scheduleData);
-            console.log("Dados enviados:", scheduleData);
-
-            showNotification("Configurações salvas com sucesso!");
+            await saveSchedule(scheduleData);
+            showNotification(<Trans>Settings saved successfully!</Trans>);
         } catch (error) {
             console.error("Erro ao salvar agendamento:", error);
             showNotification(
-                "Erro ao salvar as configurações. Tente novamente.",
+                <Trans>Error saving settings. Please try again.</Trans>,
                 "error"
             );
-        } finally {
-            setIsLoading(false);
         }
     };
 
     const categoriesBlock = [
-        { id: "adult", name: "Sites Adultos" },
-        { id: "games", name: "Jogos" },
-        { id: "bets", name: "Bets" },
+        { id: "adult", name: <Trans>Adult Sites</Trans> },
+        { id: "games", name: <Trans>Games</Trans> },
+        { id: "bets", name: <Trans>Bets</Trans> },
     ];
 
     const categoriesUnblock = [
-        { id: "message", name: "Mensagem" },
-        { id: "search", name: "Busca" },
-        { id: "bla", name: "Youtube" },
+        { id: "message", name: <Trans>Message</Trans> },
+        { id: "search", name: <Trans>Search</Trans> },
+        { id: "bla", name: <Trans>Youtube</Trans> },
     ];
 
     return (
-        <div className={`${containerStyles} space-y-8`}>
+        <div className={containerStyles}>
             {notification.show && (
                 <div
                     className={`
@@ -103,9 +112,9 @@ const InternetScheduler = () => {
             )}
 
             <h1
-                className={`${headerStyles} bg-[#38927f] text-white block px-4 py-2 rounded-none text-xl text-2xl font-bold`}
+                className={`${headerStyles} bg-[#38927f] text-white block px-4 py-6 rounded-none text-2xl font-bold`}
             >
-                Controle de Acesso à Internet
+                <Trans>Internet Access Control</Trans>
             </h1>
 
             <div className={`${cardStyles} ${cardSpacing}`}>
@@ -113,14 +122,14 @@ const InternetScheduler = () => {
                     <TimePicker
                         value={blockTime}
                         onChange={setBlockTime}
-                        label="Horário de Bloqueio"
-                        labelColor="bg-[#38927f] text-white inline-block px-6 py-3 rounded w-full text-base font-bold"
+                        label={<Trans>Block Time</Trans>}
+                        labelColor="bg-[#38927f] text-white inline-block px-6 py-4 w-full text-base font-bold"
                     />
                     <TimePicker
                         value={unblockTime}
                         onChange={setUnblockTime}
-                        label="Horário de Desbloqueio"
-                        labelColor="bg-[#38927f] text-white block px-6 py-3 rounded w-full text-base font-bold"
+                        label={<Trans>Unblock Time</Trans>}
+                        labelColor="bg-[#38927f] text-white block px-6 py-4 w-full text-base font-bold"
                     />
                 </div>
             </div>
@@ -129,8 +138,8 @@ const InternetScheduler = () => {
                 <WeekDaysPicker
                     selectedDays={selectedDays}
                     onChange={setSelectedDays}
-                    label="Dias da Semana"
-                    labelClass="bg-[#38927f] text-white block px-6 py-3 rounded w-full"
+                    label={<Trans>Days of Week</Trans>}
+                    labelClass="bg-[#38927f] text-white block px-6 py-4 w-full"
                 />
             </div>
 
@@ -140,7 +149,7 @@ const InternetScheduler = () => {
                         selectedCategories={selectedCategories}
                         onChange={setSelectedCategories}
                         onIpsChange={setBlockedIps}
-                        title="Categorias Bloqueadas"
+                        title={<Trans>Blocked Categories</Trans>}
                         categories={categoriesBlock}
                         type="block"
                     />
@@ -148,7 +157,7 @@ const InternetScheduler = () => {
                         selectedCategories={selectedCategoriesUnblock}
                         onChange={setSelectedCategoriesUnblock}
                         onIpsChange={setUnblockedIps}
-                        title="Categorias Desbloqueadas"
+                        title={<Trans>Unblocked Categories</Trans>}
                         categories={categoriesUnblock}
                         type="unblock"
                     />
@@ -161,12 +170,12 @@ const InternetScheduler = () => {
                         ${primaryButton} 
                         w-full md:w-auto 
                         text-base font-bold
-                        ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+                        ${isSaving ? "opacity-50 cursor-not-allowed" : ""}
                     `}
                     onClick={handleSubmit}
-                    disabled={isLoading}
+                    disabled={isSaving}
                 >
-                    {isLoading ? (
+                    {isSaving ? (
                         <span className="flex items-center justify-center">
                             <svg
                                 className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -188,10 +197,10 @@ const InternetScheduler = () => {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                 />
                             </svg>
-                            Salvando...
+                            <Trans>Saving...</Trans>
                         </span>
                     ) : (
-                        "Salvar Agendamento"
+                        <Trans>Save Schedule</Trans>
                     )}
                 </button>
             </div>

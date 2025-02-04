@@ -1,13 +1,10 @@
-import GuaritaMenu from "./src/guaritaMenu";
-import GuaritaPage from "./src/guaritaPage";
-import RuleList from "./src/screens/ruleList";
+import Menu from "./src/guaritaMenu";
+import Page from "./src/guaritaPage";
 
 export default {
     name: "internetControl",
-    page: GuaritaPage,
-    menu: GuaritaMenu,
-    // isCommunityProtected: true,
-    // additionalProtectedRoutes: [
-    //     ["internet-control/wellcomescreen", RuleList],
-    // ],
+    page: Page,
+    menu: Menu,
+    isCommunityProtected: true,
+    additionalProtectedRoutes: [["internet-control/wellcomescreen", Page]],
 } as LimePlugin;

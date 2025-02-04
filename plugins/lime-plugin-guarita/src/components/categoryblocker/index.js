@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/macro";
 import { useState } from "preact/hooks";
 
 import style from "./style.less";
@@ -8,7 +9,7 @@ const CategoryBlocker = ({
     title,
     categories,
     onIpsChange,
-    type = "block", // nova prop para definir se é bloqueio ou desbloqueio
+    type = "block",
 }) => {
     const [newIp, setNewIp] = useState("");
     const [customIps, setCustomIps] = useState([]);
@@ -43,14 +44,12 @@ const CategoryBlocker = ({
     const handleAddIp = (e) => {
         e.preventDefault();
         if (!newIp.trim()) {
-            setError("Por favor, insira um endereço IP");
+            setError("Please enter an IP address");
             return;
         }
 
         if (!isValidIP(newIp.trim())) {
-            setError(
-                "Por favor, insira um endereço IP válido (ex: 192.168.1.1)"
-            );
+            setError("Please enter a valid IP address (e.g. 192.168.1.1)");
             return;
         }
 
@@ -59,17 +58,11 @@ const CategoryBlocker = ({
         const updatedIps = [...customIps, newIp.trim()];
         setCustomIps(updatedIps);
 
-        // Notifica o componente pai sobre a mudança nos IPs
         onIpsChange && onIpsChange(updatedIps);
 
+        console.log(`IP ${type === "block" ? "blocked" : "unblocked"}:`, newIp);
         console.log(
-            `IP ${type === "block" ? "bloqueado" : "desbloqueado"}:`,
-            newIp
-        );
-        console.log(
-            `Lista atual de IPs ${
-                type === "block" ? "bloqueados" : "desbloqueados"
-            }:`,
+            `Current ${type === "block" ? "blocked" : "unblocked"} IP list:`,
             updatedIps
         );
 
@@ -81,27 +74,29 @@ const CategoryBlocker = ({
         setCustomIps(updatedIps);
         onIpsChange && onIpsChange(updatedIps);
         console.log(
-            `IP removido da lista de ${
-                type === "block" ? "bloqueados" : "desbloqueados"
-            }:`,
+            `IP removed from ${
+                type === "block" ? "blocked" : "unblocked"
+            } list:`,
             ip
         );
     };
 
     return (
         <div className="mt-4">
-            <label className="bg-[#38927f] text-white block px-6 py-3 rounded w-full">
+            <label className="bg-[#38927f] text-white block px-6 py-6 w-full text-2xl">
                 {title}
             </label>
             <div className="space-y-3">
                 <button
                     type="button"
                     onClick={handleSelectAll}
-                    className="text-black text-base font-sm transition-colors w-1/2 border border-gray-300 rounded-lg px-6 py-3 mt-4 mb-4 text-centralized hover:bg-gray-50"
+                    className="text-black text-base font-sm transition-colors w-[150px] border border-gray-300 rounded-lg px-6 py-3 mt-4 mb-4 text-centralized hover:bg-gray-50"
                 >
-                    {selectedCategories.length === categories.length
-                        ? "Desmarcar Todos"
-                        : "Selecionar Todos"}
+                    {selectedCategories.length === categories.length ? (
+                        <Trans>Unselect All</Trans>
+                    ) : (
+                        <Trans>Select All</Trans>
+                    )}
                 </button>
                 <div className="space-y-2">
                     {categories.map((category) => (
@@ -123,11 +118,14 @@ const CategoryBlocker = ({
                         </label>
                     ))}
 
-                    {/* Seção IPs */}
+                    {/* IPs Section */}
                     <div className="mt-6 border-t pt-4">
                         <label className="text-sm font-medium text-black block mb-2">
-                            {type === "block" ? "Bloquear" : "Desbloquear"} IPs
-                            Específicos
+                            {type === "block" ? (
+                                <Trans>Block Specific IPs</Trans>
+                            ) : (
+                                <Trans>Unblock Specific IPs</Trans>
+                            )}
                         </label>
                         <form
                             onSubmit={handleAddIp}
@@ -140,7 +138,7 @@ const CategoryBlocker = ({
                                     onChange={(e) =>
                                         setNewIp(e.currentTarget.value)
                                     }
-                                    placeholder="Digite o endereço IP (ex: 192.168.1.1)"
+                                    placeholder="Enter IP address (e.g. 192.168.1.1)"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#38927f] focus:border-[#38927f]"
                                 />
                                 {error && (
@@ -153,11 +151,11 @@ const CategoryBlocker = ({
                                 type="submit"
                                 className="bg-[#38927f] text-white px-4 py-2 rounded-lg hover:bg-[#2c7164] transition-colors"
                             >
-                                Adicionar
+                                <Trans>Add</Trans>
                             </button>
                         </form>
 
-                        {/* Lista de IPs */}
+                        {/* IP List */}
                         {customIps.length > 0 && (
                             <div className="space-y-2">
                                 {customIps.map((ip, index) => (
@@ -173,7 +171,7 @@ const CategoryBlocker = ({
                                             onClick={() => handleRemoveIp(ip)}
                                             className="text-red-600 hover:text-red-800 text-sm px-3 py-1 rounded-md hover:bg-red-50 transition-colors"
                                         >
-                                            Remover
+                                            <Trans>Remove</Trans>
                                         </button>
                                     </div>
                                 ))}

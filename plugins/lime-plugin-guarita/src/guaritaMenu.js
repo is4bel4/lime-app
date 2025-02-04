@@ -6,7 +6,7 @@ const GuaritaMenu = () => (
     <span>
         <CalendarIcon />
         <a href={"#/internetcontrol"}>
-            <Trans>Controle da Internet</Trans>
+            <Trans>Internet Control</Trans>
         </a>
     </span>
 );

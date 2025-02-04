@@ -1,4 +1,4 @@
-import style from "./style.less";
+import { Trans } from "@lingui/macro";
 
 const WeekDaysPicker = ({
     selectedDays,
@@ -7,13 +7,13 @@ const WeekDaysPicker = ({
     labelClass = "text-black",
 }) => {
     const weekDays = [
-        { id: 0, name: "Domingo" },
-        { id: 1, name: "Segunda" },
-        { id: 2, name: "Terça" },
-        { id: 3, name: "Quarta" },
-        { id: 4, name: "Quinta" },
-        { id: 5, name: "Sexta" },
-        { id: 6, name: "Sábado" },
+        { id: 0, name: <Trans>Sunday</Trans> },
+        { id: 1, name: <Trans>Monday</Trans> },
+        { id: 2, name: <Trans>Tuesday</Trans> },
+        { id: 3, name: <Trans>Wednesday</Trans> },
+        { id: 4, name: <Trans>Thursday</Trans> },
+        { id: 5, name: <Trans>Friday</Trans> },
+        { id: 6, name: <Trans>Saturday</Trans> },
     ];
 
     return (
